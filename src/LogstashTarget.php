@@ -22,12 +22,19 @@ class LogstashTarget extends \yii\log\Target
     public $dsn = 'tcp://localhost:3333';
 
     /**
+     * by biker
+     * 2017-08-03
+     * @var int socket request timeout default 30s
+     */
+    public $timeOut = 30;
+
+    /**
      * @inheritdoc
      */
     public function export()
     {
         try {
-            $socket = stream_socket_client($this->dsn, $errorNumber, $error, 30);
+            $socket = stream_socket_client($this->dsn, $errorNumber, $error, $this->timeOut);
 
             foreach ($this->messages as &$message) {
                 fwrite($socket, $this->formatMessage($message) . "\r\n");
